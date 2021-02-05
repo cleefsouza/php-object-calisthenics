@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alura\Calisthenics\Domain\Video;
 
+/**
+ * Class Video
+ * @package Alura\Calisthenics\Domain\Video
+ */
 class Video
 {
     public const PUBLIC = 1;
@@ -10,18 +16,14 @@ class Video
     private int $visibility = self::PRIVATE;
     private int $ageLimit;
 
+    public function publish(): void
+    {
+        $this->visibility = self::PUBLIC;
+    }
+
     public function getVisibility(): int
     {
         return $this->visibility;
-    }
-
-    public function checkIfVisibilityIsValidAndUpdateIt(int $visibility): void
-    {
-        if (in_array($visibility, [self::PUBLIC, self::PRIVATE])) {
-            $this->visibility = $visibility;
-        } else {
-            throw new \InvalidArgumentException('Invalid visibility');
-        }
     }
 
     public function getAgeLimit(): int
