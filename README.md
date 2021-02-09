@@ -10,7 +10,15 @@
   ```shell
   git@github.com:cleefsouza/php-object-calisthenics.git
   ```
- 
+
+### Regras
+- Não usar getters e setters
+    - Tell, don't ask
+- Ter apenas 1 nível de indentação por método
+- Nunca use else
+    - Early return
+    - Fail fast
+
 ### Autor <div id="autor"></div>
 Aryosvalldo Cleef ─ [linkedin](https://www.linkedin.com/in/aryosvalldo-cleef/) ─ [@cleefsouza](https://github.com/cleefsouza)
 
