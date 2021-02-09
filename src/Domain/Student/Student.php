@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Alura\Calisthenics\Domain\Student;
 
-use Alura\Calisthenics\Domain\Video\Video;
+use Alura\Calisthenics\Domain\Email\Email;
+use Alura\Calisthenics\Domain\Video\{Video, WacthedVideos};
+use DateTimeImmutable;
 use DateTimeInterface;
 use Ds\Map;
 use Exception;
@@ -16,19 +18,19 @@ use Exception;
 class Student
 {
     /**
-     * @var string
+     * @var Email
      */
-    private string $email;
+    private Email $email;
 
     /**
      * @var DateTimeInterface
      */
-    private DateTimeInterface $bd;
+    private DateTimeInterface $birthDate;
 
     /**
-     * @var Map
+     * @var WacthedVideos
      */
-    private Map $watchedVideos;
+    private WacthedVideos $watchedVideos;
 
     /**
      * @var string
@@ -72,8 +74,8 @@ class Student
 
     /**
      * Student constructor.
-     * @param string $email
-     * @param DateTimeInterface $bd
+     * @param Email $email
+     * @param DateTimeInterface $birthDate
      * @param string $fName
      * @param string $lName
      * @param string $street
@@ -84,8 +86,8 @@ class Student
      * @param string $country
      */
     public function __construct(
-        string $email,
-        DateTimeInterface $bd,
+        Email $email,
+        DateTimeInterface $birthDate,
         string $fName,
         string $lName,
         string $street,
@@ -95,9 +97,9 @@ class Student
         string $state,
         string $country
     ) {
-        $this->watchedVideos = new Map();
-        $this->setEmail($email);
-        $this->bd = $bd;
+        $this->watchedVideos = new WacthedVideos();
+        $this->email = $email;
+        $this->birthDate = $birthDate;
         $this->fName = $fName;
         $this->lName = $lName;
         $this->street = $street;
@@ -117,31 +119,19 @@ class Student
     }
 
     /**
-     * @param string $email
-     */
-    private function setEmail(string $email)
-    {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Invalid e-mail address');
-        }
-
-        $this->email = $email;
-    }
-
-    /**
      * @return string
      */
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->email->__toString();
     }
 
     /**
      * @return DateTimeInterface
      */
-    public function getBd(): DateTimeInterface
+    public function getBirthDate(): DateTimeInterface
     {
-        return $this->bd;
+        return $this->birthDate;
     }
 
     /**
@@ -150,7 +140,7 @@ class Student
      */
     public function watch(Video $video, DateTimeInterface $date)
     {
-        $this->watchedVideos->put($video, $date);
+        $this->watchedVideos->add($video, $date);
     }
 
     /**
@@ -172,12 +162,19 @@ class Student
      */
     public function lessThan90Days(): bool
     {
-        $this->watchedVideos->sort(fn(DateTimeInterface $dateA, DateTimeInterface $dateB) => $dateA <=> $dateB);
-
         /** @var DateTimeInterface $firstDate */
-        $firstDate = $this->watchedVideos->first()->value;
-        $today = new \DateTimeImmutable();
+        $firstDate = $this->watchedVideos->dateOfFirstVideo();
+        $today = new DateTimeImmutable();
 
         return $firstDate->diff($today)->days < 90;
+    }
+
+    public function age(): int
+    {
+        /** @var DateTimeImmutable $today */
+        $today = new DateTimeImmutable();
+        $dateInterval = $this->birthDate->diff($today);
+
+        return $dateInterval->y;
     }
 }

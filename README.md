@@ -18,6 +18,7 @@
 - Nunca use else
     - Early return
     - Fail fast
+- Envolva seus tipos primitivos (caso tenha comportamento)
 
 ### Autor <div id="autor"></div>
 Aryosvalldo Cleef ─ [linkedin](https://www.linkedin.com/in/aryosvalldo-cleef/) ─ [@cleefsouza](https://github.com/cleefsouza)
