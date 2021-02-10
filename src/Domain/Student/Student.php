@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Alura\Calisthenics\Domain\Student;
 
+use Alura\Calisthenics\Domain\Address\Address;
 use Alura\Calisthenics\Domain\Email\Email;
 use Alura\Calisthenics\Domain\Video\{Video, WacthedVideos};
 use DateTimeImmutable;
 use DateTimeInterface;
-use Ds\Map;
 use Exception;
 
 /**
@@ -43,34 +43,9 @@ class Student
     private string $lName;
 
     /**
-     * @var string
+     * @var Address
      */
-    public string $street;
-
-    /**
-     * @var string
-     */
-    public string $number;
-
-    /**
-     * @var string
-     */
-    public string $province;
-
-    /**
-     * @var string
-     */
-    public string $city;
-
-    /**
-     * @var string
-     */
-    public string $state;
-
-    /**
-     * @var string
-     */
-    public string $country;
+    private Address $address;
 
     /**
      * Student constructor.
@@ -78,36 +53,21 @@ class Student
      * @param DateTimeInterface $birthDate
      * @param string $fName
      * @param string $lName
-     * @param string $street
-     * @param string $number
-     * @param string $province
-     * @param string $city
-     * @param string $state
-     * @param string $country
+     * @param Address $address
      */
     public function __construct(
         Email $email,
         DateTimeInterface $birthDate,
         string $fName,
         string $lName,
-        string $street,
-        string $number,
-        string $province,
-        string $city,
-        string $state,
-        string $country
+        Address $address
     ) {
         $this->watchedVideos = new WacthedVideos();
         $this->email = $email;
         $this->birthDate = $birthDate;
         $this->fName = $fName;
         $this->lName = $lName;
-        $this->street = $street;
-        $this->number = $number;
-        $this->province = $province;
-        $this->city = $city;
-        $this->state = $state;
-        $this->country = $country;
+        $this->address = $address;
     }
 
     /**
@@ -169,6 +129,10 @@ class Student
         return $firstDate->diff($today)->days < 90;
     }
 
+    /**
+     * @return int
+     * @throws Exception
+     */
     public function age(): int
     {
         /** @var DateTimeImmutable $today */
@@ -176,5 +140,13 @@ class Student
         $dateInterval = $this->birthDate->diff($today);
 
         return $dateInterval->y;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->address->__toString();
     }
 }
